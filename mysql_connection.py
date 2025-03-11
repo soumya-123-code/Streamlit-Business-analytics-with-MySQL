@@ -17,7 +17,7 @@ def load_data_from_csv():
 def connect_to_mysql():
     try:
         conn = mysql.connector.connect(
-            host="localhost",
+            host="127.0.0.1",  # Using TCP/IP instead of localhost
             port="3306",
             user="root",
             passwd="",  # Provide your password if necessary
@@ -25,7 +25,7 @@ def connect_to_mysql():
         )
         return conn
     except mysql.connector.Error as err:
-        st.error(f"Error: {err}")
+        st.error(f"MySQL connection failed: {err}")
         return None
 
 # Function to fetch all data from MySQL
