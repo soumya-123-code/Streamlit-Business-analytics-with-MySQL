@@ -7,9 +7,9 @@ def load_data_from_csv():
     try:
         # Attempt to read data from CSV
         df = pd.read_csv('customers.csv')
-        st.write("Data loaded from CSV.")
         return df
     except Exception as e:
+        # If CSV loading fails, show an error message and return None
         st.error(f"Failed to load data from CSV: {str(e)}")
         return None
 
@@ -24,16 +24,15 @@ def connect_to_mysql():
             db="streamlit_mysql"
         )
         return conn
-    except mysql.connector.Error as err:
-        st.error(f"MySQL connection failed: {err}")
+    except mysql.connector.Error:
+        # Catch MySQL connection errors silently
         return None
 
 # Function to fetch all data from MySQL
 def view_all_data():
     conn = connect_to_mysql()
     if conn is None:
-        # Fallback to CSV if MySQL connection fails
-        st.warning("MySQL connection failed, loading data from CSV.")
+        # Fallback to CSV if MySQL connection fails, silently loading from CSV
         return load_data_from_csv()
     
     c = conn.cursor()
@@ -46,8 +45,7 @@ def view_all_data():
 def view_all_departments():
     conn = connect_to_mysql()
     if conn is None:
-        # Fallback to CSV if MySQL connection fails
-        st.warning("MySQL connection failed, loading departments from CSV.")
+        # Fallback to CSV if MySQL connection fails, silently loading departments from CSV
         return load_data_from_csv()['Department'].unique()  # Assuming 'Department' is a column in the CSV
     
     c = conn.cursor()
