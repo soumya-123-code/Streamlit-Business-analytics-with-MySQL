@@ -32,14 +32,22 @@ def connect_to_mysql():
 def view_all_data():
     conn = connect_to_mysql()
     if conn is None:
-        # Fallback to CSV if MySQL connection fails, silently loading from CSV
+        # Fallback to CSV if MySQL connection fails
         return load_data_from_csv()
     
     c = conn.cursor()
     c.execute('SELECT * FROM customers ORDER BY id ASC')
     data = c.fetchall()
     conn.close()  # Always close the connection when done
-    return data
+
+    # Converting the data to a DataFrame with appropriate column names
+    columns = [
+        "EEID", "Full Name", "JobTitle", "Department", "BusinessUnit", 
+        "Gender", "Ethnicity", "Age", "Hire Date", "AnnualSalary", 
+        "Bonus", "Country", "City", "id"
+    ]
+    df = pd.DataFrame(data, columns=columns)
+    return df
 
 # Function to fetch all departments from MySQL
 def view_all_departments():
